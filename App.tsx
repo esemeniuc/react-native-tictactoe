@@ -3,27 +3,20 @@ import {StyleSheet, Text, View} from 'react-native';
 import {chunk} from 'lodash';
 
 function Cell(props: { state: string, clickHandler: () => void }) {
-    return <>
-        <Text onPress={props.clickHandler}>{props.state}</Text>
-    </>
+    return <Text onPress={props.clickHandler}>{props.state}</Text>;
 }
 
 function reducer(state: Array<Array<string>>, action: { row: number, col: number }): Array<Array<string>> {
     console.log("rc target: ", action.row, action.col);
-    console.log("old: ", state);
-
     switch (state[action.row][action.col]) {
         case 'x':
             state[action.row][action.col] = 'o';
-            console.log("new: ", state);
             return [...state];
         case 'o':
             state[action.row][action.col] = '_';
-            console.log("new: ", state);
             return [...state];
         case '_':
             state[action.row][action.col] = 'x';
-            console.log("new: ", state);
             return [...state];
         default:
             throw new Error();
