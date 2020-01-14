@@ -1,6 +1,9 @@
 import React, {useReducer} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {AppRegistry, StyleSheet, Text, View} from 'react-native';
+import {DefaultTheme, Appbar, Provider as PaperProvider, withTheme} from 'react-native-paper';
 import {chunk} from 'lodash';
+// import ButtonExample from "./Button";
+import {SafeAreaProvider, SafeAreaView, useSafeArea} from 'react-native-safe-area-context';
 
 function Cell(props: { state: string, clickHandler: () => void }) {
     return <Text onPress={props.clickHandler}>{props.state}</Text>;
@@ -47,10 +50,15 @@ function reducer(state: Array<Array<string>>, action: { row: number, col: number
     }
 }
 
-export default function App() {
+function App() {
+    const insets = useSafeArea();
     const [board, dispatch] = useReducer(reducer, chunk(Array(9).fill('_'), 3));
-    return (
-        <View style={styles.container}>
+    return <>
+        <View style={{
+            paddingTop: insets.top,
+            ...styles.container
+        }}>
+            {/*<ButtonExample/>*/}
             <Text>Open up App.tsx to start working on your app!</Text>
             {board.map((row, r) =>
                 <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}} key={r}>
@@ -61,9 +69,23 @@ export default function App() {
                     }
                 </View>)}
             {isWin(board) ? <Text>"you win!"</Text> : (isTie(board) && <Text>"a tie!"</Text>)}
+            <Appbar style={stylesAppbar.bottom}>
+                <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')}/>
+                <Appbar.Action icon="label" onPress={() => console.log('Pressed label')}/>
+                <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')}/>
+            </Appbar>
         </View>
-    );
+    </>
 }
+
+const stylesAppbar = StyleSheet.create({
+    bottom: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
+    },
+});
 
 const styles = StyleSheet.create({
     container: {
@@ -72,3 +94,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     }
 });
+
+
+export default function Main() {
+    return (
+        <SafeAreaProvider>
+            <PaperProvider>
+                <App/>
+            </PaperProvider>
+        </SafeAreaProvider>
+    );
+}
