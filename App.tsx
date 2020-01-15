@@ -53,13 +53,13 @@ function reducer(state: Array<Array<string>>, action: { row: number, col: number
 function App() {
     const insets = useSafeArea();
     const [board, dispatch] = useReducer(reducer, chunk(Array(9).fill('_'), 3));
-    return <>
-        <View style={{
-            paddingTop: insets.top,
-            ...styles.container
-        }}>
-            {/*<ButtonExample/>*/}
-            <Text>Open up App.tsx to start working on your app!</Text>
+    return <View style={{
+        paddingTop: insets.top,
+        flex: 1
+    }}>
+        {/*<ButtonExample/>*/}
+        <Text>Open up App.tsx to start working on your app!</Text>
+        <View style={{flex: 1,}}>
             {board.map((row, r) =>
                 <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}} key={r}>
                     {
@@ -68,18 +68,19 @@ function App() {
                                                         key={c}/>)
                     }
                 </View>)}
-            {isWin(board) ? <Text>"you win!"</Text> : (isTie(board) && <Text>"a tie!"</Text>)}
-            <Appbar style={stylesAppbar.bottom}>
-                <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')}/>
-                <Appbar.Action icon="label" onPress={() => console.log('Pressed label')}/>
-                <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')}/>
-            </Appbar>
         </View>
-    </>
+        <Text>Status: {isWin(board) ? "you win!" : (isTie(board) && "a tie!")}</Text>
+        <Appbar style={stylesAppbar.bottom}>
+            <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')}/>
+            <Appbar.Action icon="label" onPress={() => console.log('Pressed label')}/>
+            <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')}/>
+        </Appbar>
+    </View>
 }
 
 const stylesAppbar = StyleSheet.create({
     bottom: {
+        flex: 1,
         position: 'absolute',
         left: 0,
         right: 0,
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // alignItems: 'stretch',
-        justifyContent: 'space-evenly'
+        // justifyContent: 'space-evenly'
     }
 });
 
