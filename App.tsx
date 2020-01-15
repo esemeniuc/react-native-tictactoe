@@ -88,15 +88,6 @@ const stylesAppbar = StyleSheet.create({
     },
 });
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        // alignItems: 'stretch',
-        // justifyContent: 'space-evenly'
-    }
-});
-
-
 export default function Main() {
     return (
         <SafeAreaProvider>
