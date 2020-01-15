@@ -1,12 +1,13 @@
 import React, {useReducer} from 'react';
-import {AppRegistry, StyleSheet, Text, View} from 'react-native';
-import {DefaultTheme, Appbar, Provider as PaperProvider, withTheme} from 'react-native-paper';
+import {StyleSheet, Text, View} from 'react-native';
+import {Appbar, Provider as PaperProvider, Button} from 'react-native-paper';
 import {chunk} from 'lodash';
 // import ButtonExample from "./Button";
 import {SafeAreaProvider, SafeAreaView, useSafeArea} from 'react-native-safe-area-context';
 
 function Cell(props: { state: string, clickHandler: () => void }) {
-    return <Text onPress={props.clickHandler}>{props.state}</Text>;
+    return <Button onPress={props.clickHandler}>{props.state}</Button>;
+    // return <Text onPress={props.clickHandler}>{props.state}</Text>;
 }
 
 //check diagonals, and along col and row
