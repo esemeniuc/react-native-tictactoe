@@ -1,13 +1,16 @@
 import React, {useReducer} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Appbar, Provider as PaperProvider, Button} from 'react-native-paper';
+import {Appbar, Provider as PaperProvider, Button, TouchableRipple, Surface} from 'react-native-paper';
 import {chunk} from 'lodash';
-// import ButtonExample from "./Button";
 import {SafeAreaProvider, SafeAreaView, useSafeArea} from 'react-native-safe-area-context';
 
 function Cell(props: { state: string, clickHandler: () => void }) {
-    return <Button onPress={props.clickHandler}>{props.state}</Button>;
-    // return <Text onPress={props.clickHandler}>{props.state}</Text>;
+    // return <Button mode="contained" style={{height: 100}} onPress={props.clickHandler}>{props.state}</Button>;
+    return <TouchableRipple style={{flex: 1}} onPress={props.clickHandler}>
+        <Surface style={styles.surface}>
+            <Text>{props.state}</Text>
+        </Surface>
+    </TouchableRipple>
 }
 
 //check diagonals, and along col and row
@@ -58,11 +61,10 @@ function App() {
         paddingTop: insets.top,
         flex: 1
     }}>
-        {/*<ButtonExample/>*/}
-        <Text>Open up App.tsx to start working on your app!</Text>
         <View style={{flex: 1,}}>
             {board.map((row, r) =>
-                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}} key={r}>
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly'}}
+                      key={r}>
                     {
                         row.map((stateChar, c) => <Cell state={stateChar}
                                                         clickHandler={() => dispatch({row: r, col: c})}
@@ -71,7 +73,7 @@ function App() {
                 </View>)}
         </View>
         <Text>Status: {isWin(board) ? "you win!" : (isTie(board) && "a tie!")}</Text>
-        <Appbar style={stylesAppbar.bottom}>
+        <Appbar style={styles.bottom}>
             <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')}/>
             <Appbar.Action icon="label" onPress={() => console.log('Pressed label')}/>
             <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')}/>
@@ -79,13 +81,20 @@ function App() {
     </View>
 }
 
-const stylesAppbar = StyleSheet.create({
+const styles = StyleSheet.create({
     bottom: {
         flex: 1,
         position: 'absolute',
         left: 0,
         right: 0,
         bottom: 0,
+    },
+    surface: {
+        margin: 4,
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 6,
     },
 });
 
