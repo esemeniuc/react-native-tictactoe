@@ -1,10 +1,10 @@
 import React, {useReducer, useState} from 'react';
-import {StyleSheet, Image, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {
     Appbar,
     Avatar,
     Button,
-    Dialog, Modal,
+    Dialog,
     Portal,
     Provider as PaperProvider,
     Surface,
@@ -32,6 +32,9 @@ function GameEndDialog(props: {
     dismissHandler: () => void,
     restartHandler: () => void
 }) {
+    if (props.winner === Winner.NONE) {
+        return null; //don't render if no winner (due to animation delay)
+    }
     return <Portal>
         <Dialog
             visible={props.isVisible}
