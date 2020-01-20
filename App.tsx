@@ -18,7 +18,6 @@ function Cell(props: { state: BoardSelection, clickHandler: () => void }) {
 }
 
 function GameEndDialog(props: {
-    children: ReactChild,
     isVisible: boolean,
     winner: Winner,
     dismissHandler: () => void,
@@ -34,7 +33,13 @@ function GameEndDialog(props: {
                         "A Tie!"
                 }
             </Dialog.Title>
-            <Dialog.Content>{props.children}</Dialog.Content>
+            <Dialog.Content>
+                {props.winner === Winner.X ? <WinCard winner="X"/> :
+                    props.winner === Winner.O ? <WinCard winner="O"/> :
+                        <><Avatar.Icon icon="scale-balance"/>
+                            <Text>Play again to find the winner!</Text></>
+                }
+            </Dialog.Content>
             <Dialog.Actions>
                 <Button icon="restart" onPress={props.resetHandler}>New Game</Button>
             </Dialog.Actions>
@@ -63,15 +68,9 @@ function reducer(state: Array<Array<BoardSelection>>, action: { row: number, col
     }
 }
 
-function WinCard() {
-    return <>
-        {/*<Image*/}
-        {/*    style={{width: 50, height: 50}}*/}
-        {/*    source={{uri: 'https://facebook.github.io/react-native/img/tiny_logo.png'}}*/}
-        {/*/>*/}
-        <Avatar.Icon icon="trophy"/>
-        <Text>You won!</Text>
-    </>
+function WinCard(props: { winner: string }) {
+    return <><Avatar.Icon icon="trophy"/>
+        <Text>Congratulations player {props.winner}!</Text></>
 }
 
 //Todo: add reset button
@@ -97,10 +96,7 @@ function App() {
                        resetHandler={() => {
                            setIsHideModal(false);
                            dispatch({row: 0, col: 0, reset: true});
-                       }}>
-            <WinCard/>
-        </GameEndDialog>
-        {/*<Text style={{flex: 1}}>Status: {isWin(board) ? "you win!" : (isTie(board) && "a tie!")}</Text>*/}
+                       }}/>
         {/*<Appbar style={styles.bottom}>*/}
         {/*    <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')}/>*/}
         {/*    <Appbar.Action icon="label" onPress={() => console.log('Pressed label')}/>*/}
