@@ -1,10 +1,10 @@
 import React, {useReducer, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Image, Text, View} from 'react-native';
 import {
     Appbar,
     Avatar,
     Button,
-    Dialog,
+    Dialog, Modal,
     Portal,
     Provider as PaperProvider,
     Surface,
@@ -56,6 +56,21 @@ function GameEndDialog(props: {
     </Portal>
 }
 
+function AboutPage(props: {
+    isVisible: boolean,
+    dismissHandler: () => void,
+}) {
+    return <Portal>
+        <Dialog visible={props.isVisible} onDismiss={props.dismissHandler}>
+            <Dialog.Title>About</Dialog.Title>
+            <Dialog.Content>
+                <Image source={{uri: 'https://picsum.photos/700'}}/>
+                <Text>Written by Eric Semeniuc - Jan 2020</Text>
+            </Dialog.Content>
+        </Dialog>
+    </Portal>
+}
+
 //board state transitions
 function reducer(state: Array<Array<BoardSelection>>, action: { row: number, col: number, reset: boolean }): Array<Array<BoardSelection>> {
     console.log("rc target: ", action.row, action.col);
@@ -83,6 +98,7 @@ function WinCard(props: { winner: string }) {
 }
 
 function App() {
+    const [showAbout, setShowAbout] = useState(false);
     const [isHideModal, setIsHideModal] = useState(false);
     const [board, dispatch] = useReducer(reducer, chunk(Array(9).fill(BoardSelection.NONE), 3));
     const winner = getWinner(board);
@@ -106,9 +122,10 @@ function App() {
                        winner={winner}
                        dismissHandler={() => setIsHideModal(true)}
                        restartHandler={restartHandler}/>
+        <AboutPage isVisible={showAbout} dismissHandler={() => setShowAbout(false)}/>
         <Appbar style={styles.bottom}>
             <Appbar.Action icon="restart" onPress={restartHandler}/>
-            <Appbar.Action icon="help" onPress={() => console.log('Pressed archive')}/>
+            <Appbar.Action icon="help" onPress={() => setShowAbout(true)}/>
         </Appbar>
     </View>
 }
