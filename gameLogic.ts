@@ -1,20 +1,43 @@
 //check diagonals, and along col and row
-export function isWin(state: Array<Array<string>>): boolean {
+
+export enum Winner {X, O, TIE, NONE}
+
+export enum BoardSelection {X, O, NONE}
+
+export function getWinner(board: Array<Array<BoardSelection>>): Winner {
+    const selection2winner = (input: BoardSelection): Winner => {
+        switch (input) {
+            case BoardSelection.X:
+                return Winner.X;
+            case BoardSelection.O:
+                return Winner.O;
+        }
+    };
     for (let i = 0; i < 3; i++) {
-        if ((state[i][0] === state[i][1] && state[i][1] === state[i][2] && state[i][0] !== '_') ||
-            (state[0][i] === state[1][i] && state[1][i] === state[2][i] && state[0][i] !== '_')) {
-            return true;
+        if (board[i][0] === board[i][1] &&
+            board[i][1] === board[i][2] &&
+            board[i][0] !== BoardSelection.NONE) {
+            return selection2winner(board[i][0]);
+        }
+        if (board[0][i] === board[1][i] &&
+            board[1][i] === board[2][i] &&
+            board[0][i] !== BoardSelection.NONE) {
+            return selection2winner(board[0][i]);
         }
     }
-    return ((state[0][0] === state[1][1] && state[1][1] === state[2][2]) || //cross
-        (state[2][0] === state[1][1] && state[1][1] === state[0][2])) && state[1][1] !== '_';
+    if (((board[0][0] === board[1][1] && board[1][1] === board[2][2]) || //cross
+        (board[2][0] === board[1][1] && board[1][1] === board[0][2])) && board[1][1] !== BoardSelection.NONE) {
+        return selection2winner(board[1][1]);
+    }
+
+    return isTie(board) ? Winner.TIE : Winner.NONE;
 }
 
 //all spaces are set is a tie
-export function  isTie(state: Array<Array<string>>): boolean {
+export function isTie(state: Array<Array<BoardSelection>>): boolean {
     for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
-            if (state[i][j] === '_') {
+            if (state[i][j] === BoardSelection.NONE) {
                 return false;
             }
         }
