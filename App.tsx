@@ -36,7 +36,7 @@ function GameEndDialog(props: {
             </Dialog.Title>
             <Dialog.Content>{props.children}</Dialog.Content>
             <Dialog.Actions>
-                <Button icon="camera" onPress={props.resetHandler}>New Game</Button>
+                <Button icon="restart" onPress={props.resetHandler}>New Game</Button>
             </Dialog.Actions>
         </Dialog>
     </Portal>
@@ -46,7 +46,7 @@ function GameEndDialog(props: {
 function reducer(state: Array<Array<BoardSelection>>, action: { row: number, col: number, reset: boolean }): Array<Array<BoardSelection>> {
     console.log("rc target: ", action.row, action.col);
     if (action.reset) {
-        return chunk(Array(9).fill('_'), 3);
+        return chunk(Array(9).fill(BoardSelection.NONE), 3);
     }
     switch (state[action.row][action.col]) {
         case BoardSelection.X:
@@ -76,10 +76,10 @@ function WinCard() {
 
 //Todo: add reset button
 function App() {
-    const insets = useSafeArea();
     const [isHideModal, setIsHideModal] = useState(false);
     const [board, dispatch] = useReducer(reducer, chunk(Array(9).fill(BoardSelection.NONE), 3));
     const winner = getWinner(board);
+    const insets = useSafeArea();
     return <View style={{paddingTop: insets.top, flex: 1}}>
         <View style={{flex: 1}}>
             {board.map((row, r) =>
@@ -93,7 +93,7 @@ function App() {
         </View>
         <GameEndDialog isVisible={winner !== Winner.NONE && !isHideModal}
                        winner={winner}
-                       dismissHandler={() => setIsHideModal(false)}
+                       dismissHandler={() => setIsHideModal(true)}
                        resetHandler={() => {
                            setIsHideModal(false);
                            dispatch({row: 0, col: 0, reset: true});
