@@ -82,7 +82,6 @@ function WinCard(props: { winner: string }) {
         <Text>Congratulations player {props.winner}!</Text></>
 }
 
-//Todo: add reset button
 function App() {
     const [isHideModal, setIsHideModal] = useState(false);
     const [board, dispatch] = useReducer(reducer, chunk(Array(9).fill(BoardSelection.NONE), 3));
