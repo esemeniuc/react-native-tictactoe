@@ -1,6 +1,15 @@
-import React, {ReactChild, useReducer, useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Avatar, Button, Dialog, Portal, Provider as PaperProvider, Surface, TouchableRipple} from 'react-native-paper';
+import {
+    Appbar,
+    Avatar,
+    Button,
+    Dialog,
+    Portal,
+    Provider as PaperProvider,
+    Surface,
+    TouchableRipple
+} from 'react-native-paper';
 import {chunk} from 'lodash';
 import {SafeAreaProvider, useSafeArea} from 'react-native-safe-area-context';
 import {BoardSelection, getWinner, Winner} from "./gameLogic";
@@ -21,7 +30,7 @@ function GameEndDialog(props: {
     isVisible: boolean,
     winner: Winner,
     dismissHandler: () => void,
-    resetHandler: () => void
+    restartHandler: () => void
 }) {
     return <Portal>
         <Dialog
@@ -41,7 +50,7 @@ function GameEndDialog(props: {
                 }
             </Dialog.Content>
             <Dialog.Actions>
-                <Button icon="restart" onPress={props.resetHandler}>New Game</Button>
+                <Button icon="restart" onPress={props.restartHandler}>New Game</Button>
             </Dialog.Actions>
         </Dialog>
     </Portal>
@@ -79,6 +88,10 @@ function App() {
     const [board, dispatch] = useReducer(reducer, chunk(Array(9).fill(BoardSelection.NONE), 3));
     const winner = getWinner(board);
     const insets = useSafeArea();
+    const restartHandler = () => {
+        setIsHideModal(false);
+        dispatch({row: 0, col: 0, reset: true});
+    };
     return <View style={{paddingTop: insets.top, flex: 1}}>
         <View style={{flex: 1}}>
             {board.map((row, r) =>
@@ -93,22 +106,16 @@ function App() {
         <GameEndDialog isVisible={winner !== Winner.NONE && !isHideModal}
                        winner={winner}
                        dismissHandler={() => setIsHideModal(true)}
-                       resetHandler={() => {
-                           setIsHideModal(false);
-                           dispatch({row: 0, col: 0, reset: true});
-                       }}/>
-        {/*<Appbar style={styles.bottom}>*/}
-        {/*    <Appbar.Action icon="archive" onPress={() => console.log('Pressed archive')}/>*/}
-        {/*    <Appbar.Action icon="label" onPress={() => console.log('Pressed label')}/>*/}
-        {/*    <Appbar.Action icon="delete" onPress={() => console.log('Pressed delete')}/>*/}
-        {/*</Appbar>*/}
+                       restartHandler={restartHandler}/>
+        <Appbar style={styles.bottom}>
+            <Appbar.Action icon="restart" onPress={restartHandler}/>
+            <Appbar.Action icon="help" onPress={() => console.log('Pressed archive')}/>
+        </Appbar>
     </View>
 }
 
 const styles = StyleSheet.create({
     bottom: {
-        flex: 1,
-        position: 'absolute',
         left: 0,
         right: 0,
         bottom: 0,
